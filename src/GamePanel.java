@@ -68,17 +68,34 @@ public class GamePanel extends JPanel implements Runnable {
     }
     
     public void update() {
+        // Calculate movement direction
+        int deltaX = 0;
+        int deltaY = 0;
+        
         if (keyH.upPressed) {
-            playerY -= playerSpeed;
+            deltaY -= 1;
         }
         if (keyH.downPressed) {
-            playerY += playerSpeed;
+            deltaY += 1;
         }
         if (keyH.leftPressed) {
-            playerX -= playerSpeed;
+            deltaX -= 1;
         }
         if (keyH.rightPressed) {
-            playerX += playerSpeed;
+            deltaX += 1;
+        }
+        int deltaX = 0;
+        
+        // Normalize diagonal movement to maintain consistent speed
+        if (deltaX != 0 && deltaY != 0) {
+            // Moving diagonally - apply speed to normalized vector
+            double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            playerX += (int) (deltaX / length * playerSpeed);
+            playerY += (int) (deltaY / length * playerSpeed);
+        } else if (deltaX != 0 || deltaY != 0) {
+            // Moving in single direction
+            playerX += deltaX * playerSpeed;
+            playerY += deltaY * playerSpeed;
         }
 
         // Keep player inside screen bounds
